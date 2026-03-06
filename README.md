@@ -213,6 +213,7 @@ Mode B：多代币交叉分析。
 - [x] 后端源码里没有硬编码 Moralis key
 - [x] 前端源码里没有硬编码 BscScan key
 - [x] `.env` 已加入 `.gitignore`
+- [x] 前端生产 API 地址已切到 `https://api.clawback.win`
 - [ ] 仓库历史里如果曾提交过真实 key，仍需 **rotate / 更换密钥**
 - [ ] 确认线上部署环境已填入新 key
 
