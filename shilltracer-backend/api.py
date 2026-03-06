@@ -4,7 +4,7 @@ Flask API for ShillTracer with dual API rotation
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dual_api_analyzer import analyze_wallet_buys, compare_wallets, get_api_stats
-from mode_b_block_range import analyze_token_buyers_by_block, cross_reference_buyers
+from mode_b_block_range import analyze_token_buyers_by_block, analyze_token_buyers_by_time, cross_reference_buyers
 from config import MORALIS_API_KEYS, MORALIS_API_BASE, BSCSCAN_API_KEY, BSCSCAN_API_BASE, validate_backend_env
 import requests
 import os
@@ -275,14 +275,13 @@ def analyze_multi_tokens():
             return jsonify({'error': '无法获取足够的区块号'}), 400
         
         # Analyze each token
-        window_blocks = int(window_minutes * 20)  # ~20 blocks per minute on BSC
         analyses = []
         
         for item in tokens_with_blocks:
-            analysis = analyze_token_buyers_by_block(
+            analysis = analyze_token_buyers_by_time(
                 item['token'],
-                item['shill_block'],
-                window_blocks=window_blocks
+                item['shill_time'],
+                window_minutes=window_minutes
             )
             analyses.append(analysis)
         
