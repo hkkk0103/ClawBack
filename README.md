@@ -229,10 +229,21 @@ Mode B：多代币交叉分析。
 - 前端脚本语法检查
 - `GET /api/health`
 - `GET /api/bnb-price`
-- `POST /api/analyze-wallets`
+- `POST /api/analyze-mode-a`
 - `POST /api/analyze-multi-tokens`
 - Mode B 目标钱包命中回归
 - 钱包链接跳转 GMGN
+
+---
+
+## 当前生产部署
+
+- 前端：`https://clawback.win`
+- 后端：`https://api.clawback.win`
+- Cloudflare Pages 仓库：`hkkk0103/ClawBack`
+- Railway 自定义域名：`api.clawback.win`
+
+> 如果你是 fork 本项目自行部署，请把前端里的 `window.SHILLTRACER_API_BASE` 改成你自己的 API 域名。
 
 ---
 
@@ -260,5 +271,19 @@ MIT
 - `BSCSCAN_API_KEY`
 - `PORT=5001`
 
-启动命令：
-- `python api.py`
+推荐方式（二选一）：
+- 使用 `railway.json` 中已配置的启动命令
+- 或手动填写 Start Command：`cd shilltracer-backend && bash start.sh`
+
+---
+
+## 发布前 Checklist
+
+- [x] `clawback.win` 可打开
+- [x] `api.clawback.win` 可返回接口数据
+- [x] Mode A 已验证
+- [x] Mode B 已验证
+- [x] 前端已切正式 API 域名
+- [x] `.env` 未提交到仓库
+- [ ] 轮换历史上暴露过的 Moralis / BscScan key
+- [ ] 决定是否打 GitHub Release / 补项目截图
