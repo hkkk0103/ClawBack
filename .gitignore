@@ -1,0 +1,32 @@
+# Global
+.DS_Store
+*.log
+*.tmp
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# ShillTracer generated files
+shilltracer-backend/__pycache__/
+shilltracer-backend/analysis_result.txt
+shilltracer-backend/moralis_test_result.txt
+shilltracer-backend/rpc_test_output.txt
+
+
+# ClawBack local/runtime
+shilltracer-backend/.env
+shilltracer-backend/venv/
+shilltracer-backend/.venv/
+.deploy-logs/
+.npm-tmp-cache/
+__pycache__/
+*.pyc
