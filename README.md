@@ -132,16 +132,17 @@ file:///.../shilltracer-preview.html
 ### `GET /api/stats`
 返回 Moralis / BscScan 调用统计。
 
-### `POST /api/analyze-wallets`
-Mode A：两钱包关联分析。
+### `POST /api/analyze-mode-a`
+Mode A：已知钱包关联分析。
 
 请求：
 
 ```json
 {
-  "wallet1": "0x...",
-  "wallet2": "0x...",
-  "tokens": ["0x...", "0x..."]
+  "token": "0x...",
+  "shill_time": "2026/03/07 00:30",
+  "kol_wallet": "0x...",
+  "window_minutes": 15
 }
 ```
 
@@ -260,4 +261,4 @@ MIT
 - `PORT=5001`
 
 启动命令：
-- `bash start.sh`
+- `python api.py`
