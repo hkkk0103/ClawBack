@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["python311", "gcc"]
+
+[phases.install]
+cmds = ["cd shilltracer-backend && python3 -m venv venv && . venv/bin/activate && pip install -r requirements.txt"]
+
+[start]
+cmd = "cd shilltracer-backend && bash start.sh"

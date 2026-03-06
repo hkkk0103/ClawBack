@@ -45,7 +45,8 @@ BSC 链上喊单埋伏钱包分析工具。支持两种模式：
 ## 项目结构
 
 ```text
-shilltracer-preview.html        # 前端静态页
+index.html                      # Cloudflare Pages 首页
+shilltracer-preview.html        # 预览页原文件
 shilltracer-assets/             # 前端静态资源
 shilltracer-backend/
   api.py                        # Flask API
@@ -192,14 +193,14 @@ Mode B：多代币交叉分析。
 - 使用单独 API 域名，例如 `api.shilltracer.xxx.com`
 
 ### 域名结构建议
-- 前端：`shilltracer.yourdomain.com`
-- 后端：`api.shilltracer.yourdomain.com`
+- 前端：`clawback.win`
+- 后端：`api.clawback.win`
 
 前端部署时加：
 
 ```html
 <script>
-  window.SHILLTRACER_API_BASE = 'https://api.shilltracer.yourdomain.com';
+  window.SHILLTRACER_API_BASE = 'https://api.clawback.win';
 </script>
 ```
 
@@ -236,3 +237,26 @@ Mode B：多代币交叉分析。
 ## License
 
 MIT
+
+
+## Cloudflare Pages / Railway 部署落地
+
+### Cloudflare Pages
+- Repository: `hkkk0103/ClawBack`
+- Framework preset: `None`
+- Build command: 留空
+- Build output directory: `/`
+- Root directory: `/`
+- 首页文件：`index.html`
+
+### Railway
+建议新建服务后将 Root Directory 指向：
+- `shilltracer-backend`
+
+环境变量至少配置：
+- `MORALIS_API_KEYS`
+- `BSCSCAN_API_KEY`
+- `PORT=5001`
+
+启动命令：
+- `bash start.sh`
