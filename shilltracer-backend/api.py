@@ -341,21 +341,44 @@ def bscscan_proxy():
 
 @app.route('/api/bnb-price', methods=['GET'])
 def bnb_price():
-    """Get current BNB price from Binance"""
-    try:
-        import requests
-        resp = requests.get('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT', timeout=5)
-        if resp.status_code == 200:
+    """Get current BNB price with public-source fallbacks."""
+    sources = [
+        ('binance', 'https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT'),
+        ('binance_us', 'https://api.binance.us/api/v3/ticker/price?symbol=BNBUSDT'),
+        ('coingecko', 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd'),
+    ]
+
+    errors = []
+    for source_name, url in sources:
+        try:
+            resp = requests.get(url, timeout=8)
+            resp.raise_for_status()
             data = resp.json()
-            price = float(data['price'])
+
+            if source_name.startswith('binance'):
+                price = float(data['price'])
+            else:
+                price = float(data['binancecoin']['usd'])
+
             return jsonify({
                 'price': price,
-                'threshold_20usd': 20 / price
+                'threshold_20usd': 20 / price,
+                'source': source_name,
             })
-        else:
-            return jsonify({'error': 'Failed to fetch price'}), 500
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        except Exception as e:
+            errors.append(f'{source_name}: {e}')
+
+    return jsonify({'error': 'Failed to fetch price', 'details': errors}), 500
+
+@app.route('/api/health', methods=['GET'])
+def health():
+    """Basic health endpoint for deploy diagnostics."""
+    return jsonify({
+        'ok': True,
+        'service': 'shilltracer-backend',
+        'moralis_keys_loaded': len(MORALIS_API_KEYS),
+        'has_bscscan_key': bool(BSCSCAN_API_KEY),
+    })
 
 @app.route('/api/stats', methods=['GET'])
 def stats():
