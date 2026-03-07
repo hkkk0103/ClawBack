@@ -289,3 +289,7 @@ MIT
 - [x] `.env` 未提交到仓库
 - [ ] 轮换历史上暴露过的 Moralis / BscScan key
 - [ ] 决定是否打 GitHub Release / 补项目截图
+- [ ] 
+如果对你有帮助
+感谢打赏
+BSC：0x79d2e508070337c66b3e7c2d7bf427232c9a0536
