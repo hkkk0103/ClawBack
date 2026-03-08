@@ -1,207 +1,263 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClawBack — clawback小助手</title>
-<link rel="icon" type="image/png" sizes="32x32" href="shilltracer-assets/favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="shilltracer-assets/favicon/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="shilltracer-assets/favicon/apple-touch-icon.png">
-<link rel="shortcut icon" href="shilltracer-assets/favicon/favicon.ico">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0a0a0f;--surface:#111118;--surface2:#161622;--border:#242438;--accent:#ff4422;--accentSoft:rgba(255,68,34,.10);--text:#e6e6f0;--muted:#9a9ab2;--soft:#ffd4cb;--green:#87ffc5;--yellow:#ffd37a}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(255,68,34,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,68,34,.025) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;z-index:0}
-.page{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:24px 24px 80px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0 20px;flex-wrap:wrap}
-.brand,.nav a,.eyebrow,.section-label,.pill,.btn,.card-badge,.mini{font-family:'Space Mono',monospace}
-.brand{font-size:13px;letter-spacing:2px;color:#ff9f8c;font-weight:700;text-transform:uppercase}
-.nav{display:flex;gap:10px;flex-wrap:wrap}
-.nav a{text-decoration:none;color:#ffd4cb;border:1px solid #332621;background:rgba(255,68,34,.05);padding:10px 12px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.5px}
-.nav a:hover{border-color:rgba(255,68,34,.45);transform:translateY(-1px)}
-.hero{display:grid;grid-template-columns:1.1fr 420px;gap:28px;align-items:center;padding:20px 0 24px}
-.eyebrow{font-size:12px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-bottom:16px}
-.hero h1{font-size:68px;line-height:.98;letter-spacing:-2px;margin-bottom:16px}
-.hero h1 .dim{color:#ff8b72}
-.hero p{font-size:18px;line-height:1.9;color:var(--soft);max-width:720px}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 16px;border-radius:14px;text-decoration:none;font-size:12px;font-weight:800;letter-spacing:1px;transition:.2s}
-.btn.primary{background:var(--accent);color:#fff;box-shadow:0 12px 24px rgba(255,68,34,.18)}
-.btn.ghost{border:1px solid #3a2a25;color:#ffd4cb;background:transparent}
-.btn:hover{transform:translateY(-1px)}
-.hero-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.pill{font-size:11px;padding:7px 11px;border-radius:999px;border:1px solid rgba(255,68,34,.24);background:rgba(255,68,34,.08);color:#ffd4cb;font-weight:700}
-.hero-visual{position:relative;min-height:360px;display:flex;align-items:center;justify-content:center}
-.hero-visual::before{content:'';position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,68,34,.24) 0%,transparent 72%);filter:blur(4px)}
-.hero-visual img{position:relative;z-index:1;width:100%;max-width:360px;object-fit:contain;filter:drop-shadow(0 24px 48px rgba(255,68,34,.18))}
-.hero-note{position:absolute;right:8px;bottom:8px;z-index:2;max-width:220px;background:rgba(17,17,24,.88);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:12px 14px;color:#bdbdd1;font-size:12px;line-height:1.7}
-.divider{height:1px;background:var(--border);margin:8px 0 30px}
-.section{margin-top:34px}
-.section-label{font-size:12px;letter-spacing:4px;color:#ffd4cb;text-transform:uppercase;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:12px}
-.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
-.intro{max-width:880px;color:#c9c9d7;line-height:1.95;font-size:15px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
-.card{position:relative;background:linear-gradient(180deg,rgba(255,68,34,.05) 0%,rgba(20,20,31,.98) 34%);border:1px solid var(--border);border-radius:24px;padding:22px;box-shadow:0 22px 50px rgba(0,0,0,.20);overflow:hidden}
-.card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(255,68,34,.12),transparent 40%);pointer-events:none}
-.card>*{position:relative;z-index:1}
-.card-badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,68,34,.22);background:rgba(255,68,34,.08);color:#ffd4cb;font-weight:700;margin-bottom:14px}
-.card-badge.live{border-color:rgba(0,255,136,.22);background:rgba(0,255,136,.08);color:var(--green)}
-.card-badge.soon{border-color:rgba(255,170,0,.22);background:rgba(255,170,0,.08);color:var(--yellow)}
-.card h2{font-size:30px;line-height:1.08;margin-bottom:12px}
-.card p{font-size:14px;line-height:1.9;color:#cbcbdb;margin-bottom:16px;min-height:118px}
-.preview{display:flex;align-items:center;gap:14px;background:#0f0f17;border:1px solid rgba(255,255,255,.04);border-radius:18px;padding:14px;margin-bottom:16px;min-height:116px}
-.preview img{width:92px;height:92px;object-fit:contain}
-.preview .thumb-video{width:124px;height:88px;border-radius:12px;object-fit:cover;background:#08080c}
-.preview-copy{font-size:13px;line-height:1.8;color:#c9c9d7}
-.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.meta span{font-family:'Space Mono',monospace;font-size:11px;padding:5px 8px;border-radius:999px;border:1px solid #2a2a3a;background:#101018;color:#a6a6ba;font-weight:700}
-.actions{display:flex;flex-wrap:wrap;gap:10px}
-.mini-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:20px}
-.panel{background:linear-gradient(180deg,rgba(255,68,34,.04) 0%,rgba(20,20,31,.98) 36%);border:1px solid var(--border);border-radius:22px;padding:22px}
-.panel h3{font-size:22px;margin-bottom:12px}
-.list{display:grid;gap:12px}
-.item{background:#101018;border:1px solid #26263a;border-radius:16px;padding:15px 16px}
-.item strong{display:block;margin-bottom:6px;font-size:15px}
-.item p,.item li{font-size:14px;line-height:1.85;color:#c9c9d7}
-.item ul{padding-left:18px}
-.footer{margin-top:28px;padding-top:18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#7f7f94;font-size:12px;line-height:1.8}
-@media(max-width:980px){.hero,.grid,.mini-grid{grid-template-columns:1fr}.hero h1{font-size:46px}.page{padding:18px 16px 56px}.card p{min-height:auto}.hero-visual{min-height:280px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClawBack小助手</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="shilltracer-assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="shilltracer-assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="shilltracer-assets/favicon/apple-touch-icon.png">
+  <link rel="shortcut icon" href="shilltracer-assets/favicon/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#09090e;
+      --surface:#101019;
+      --surface-2:#141420;
+      --border:#26263a;
+      --accent:#ff4d2d;
+      --accent-soft:rgba(255,77,45,.12);
+      --text:#f3f3fb;
+      --muted:#a8a8bd;
+      --soft:#ffd8cf;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Noto Sans SC',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top, rgba(255,77,45,.10), transparent 32%),
+        linear-gradient(180deg,#0b0b10 0%,#09090e 100%);
+      min-height:100vh;
+    }
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(rgba(255,77,45,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,77,45,.028) 1px, transparent 1px);
+      background-size:30px 30px;
+      pointer-events:none;
+      z-index:0;
+    }
+    .page{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+    .topbar-shell{max-width:1180px;margin:0 auto;}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 0 18px;flex-wrap:wrap}
+    .brand,.nav a,.tool-link,.label{font-family:'Space Mono',monospace}
+    .brand{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#ffab99;font-weight:700}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav a{
+      color:#ffd8cf;
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:12px;
+      transition:.18s ease;
+    }
+    .nav a:hover,.tool-card:hover{transform:translateY(-2px)}
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:28px;
+      align-items:center;
+      min-height:560px;
+      padding:26px 0 34px;
+    }
+    .label{
+      display:inline-flex;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,77,45,.24);
+      background:var(--accent-soft);
+      color:#ffb3a3;
+      font-size:11px;
+      letter-spacing:1.8px;
+      margin-bottom:20px;
+    }
+    .hero h1{
+      font-size:76px;
+      line-height:.96;
+      letter-spacing:-2.6px;
+      margin-bottom:18px;
+    }
+    .hero p{
+      max-width:640px;
+      font-size:18px;
+      line-height:1.9;
+      color:var(--soft);
+    }
+    .hero-art{
+      position:relative;
+      min-height:520px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .hero-art::before{
+      content:'';
+      position:absolute;
+      width:380px;
+      height:380px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,77,45,.22) 0%, rgba(255,77,45,.08) 38%, transparent 72%);
+      filter:blur(8px);
+    }
+    .hero-art img{
+      position:relative;
+      z-index:1;
+      width:min(100%,520px);
+      object-fit:contain;
+      filter:drop-shadow(0 28px 60px rgba(0,0,0,.35));
+    }
+    .section{margin-top:24px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:18px}
+    .section-head h2{font-size:28px}
+    .section-head p{color:var(--muted);font-size:14px}
+    .tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .tool-card{
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:390px;
+      background:linear-gradient(180deg,rgba(255,77,45,.05) 0%, rgba(16,16,25,.96) 36%);
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:24px;
+      text-decoration:none;
+      color:inherit;
+      box-shadow:0 22px 50px rgba(0,0,0,.22);
+      transition:.18s ease;
+    }
+    .tool-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+    .tool-badge{
+      font-family:'Space Mono',monospace;
+      font-size:11px;
+      letter-spacing:1.6px;
+      color:#ffb8a8;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,77,45,.22);
+      background:rgba(255,77,45,.08);
+    }
+    .tool-card h3{font-size:36px;line-height:1.08;margin-top:16px}
+    .tool-card p{font-size:15px;line-height:1.85;color:#cfcfe0;margin-top:12px;max-width:520px}
+    .tool-preview{
+      margin:22px 0 18px;
+      min-height:180px;
+      border-radius:22px;
+      background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01));
+      border:1px solid rgba(255,255,255,.05);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .tool-preview img{max-width:72%;max-height:170px;object-fit:contain;filter:drop-shadow(0 20px 36px rgba(0,0,0,.3))}
+    .tool-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto}
+    .tool-tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tool-tags span{
+      font-family:'Space Mono',monospace;
+      font-size:11px;
+      color:#a8a8bd;
+      padding:5px 8px;
+      border-radius:999px;
+      background:#0f0f17;
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .tool-link{color:#fff;font-size:12px;letter-spacing:1px}
+    .footer-note{margin-top:34px;padding-top:18px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:11px;color:#6b6b7d;opacity:.82;letter-spacing:.2px}
+    .footer-note span{color:#8d8da3}
+    @media (max-width: 960px){
+      .hero,.tool-grid{grid-template-columns:1fr}
+      .hero{min-height:auto;padding-top:12px}
+      .hero h1{font-size:52px}
+      .hero-art{min-height:340px;order:-1}
+      .tool-card{min-height:unset}
+      .page{padding:18px 16px 56px}
+    }
+  </style>
 </head>
 <body>
-<div class="page">
-  <header class="topbar">
-    <div class="brand">ClawBack / Multi-Tool Portal</div>
-    <nav class="nav">
-      <a href="index.html">导航首页</a>
-      <a href="detective.html">龙虾侦探</a>
-      <a href="alert.html">龙虾出货预警助手</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <div>
-      <div class="eyebrow">// ClawBack · Tool Navigation</div>
-      <h1>clawback小助手<br><span class="dim">把入口、产品、工具先搭完整</span></h1>
-      <p>先不纠结透明底素材，先把 <strong>ClawBack</strong> 的站点结构做顺：导航页只负责分流，<strong>龙虾侦探</strong> 保留原本链上追踪能力，<strong>龙虾出货预警助手</strong> 拆成独立产品页。这样后面继续加工具，也不用反复拆首页。</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="#tools">查看工具入口 ↓</a>
-        <a class="btn ghost" href="detective.html">直接去龙虾侦探 ↗</a>
-        <a class="btn ghost" href="alert.html">直接去出货助手 ↗</a>
-      </div>
-      <div class="hero-tags">
-        <span class="pill">导航页</span>
-        <span class="pill">多工具入口</span>
-        <span class="pill">链上追踪</span>
-        <span class="pill">Chrome 插件</span>
-        <span class="pill">后续可扩展</span>
-      </div>
+  <div class="page">
+    <div class="topbar-shell">
+    <header class="topbar">
+      <div class="brand">ClawBack</div>
+      <nav class="nav">
+        <a href="#tools">工具入口</a>
+        <a href="detective.html">龙虾侦探</a>
+        <a href="alert.html">出货预警助手</a>
+      </nav>
+    </header>
     </div>
-    <div class="hero-visual">
-      <img src="shilltracer-assets/characters/clawback-helper-hero.jpg" alt="clawback小助手">
-      <div class="hero-note">当前 hero 先继续用这张临时 JPG。你刚刚已经说了，先不管透明底，先把 ClawBack 的事情干完。</div>
-    </div>
-  </section>
 
-  <div class="divider"></div>
-
-  <section class="section" id="tools">
-    <div class="section-label">工具入口</div>
-    <p class="intro">现在先把信息架构固定成 3 块：<strong>一个主工具页</strong>、<strong>一个插件产品页</strong>、<strong>一个后续扩展位</strong>。这样无论你之后加监控页、情报页、更多插件，首页都能继续长，不会再回到“所有内容塞一页”的状态。</p>
-
-    <div class="grid">
-      <article class="card">
-        <div class="card-badge live">Live Tool</div>
-        <h2>龙虾侦探</h2>
-        <p>保留原本的链上追踪工具：已知钱包追踪、未知钱包交叉锁定、捆绑交易识别、GMGN 直达都还在。现在它已经从首页拆出去，变成独立可维护页面。</p>
-        <div class="preview">
-          <img src="shilltracer-assets/characters/lobster-hud-cutout.png" alt="龙虾侦探">
-          <div class="preview-copy">这是原本的主工具，不再和插件说明混在一个超长页里，后面功能迭代会更干净。</div>
-        </div>
-        <div class="meta"><span>On-Chain</span><span>Mode A</span><span>Mode B</span><span>GMGN</span></div>
-        <div class="actions">
-          <a class="btn primary" href="detective.html">进入龙虾侦探 ↗</a>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="card-badge live">Chrome Extension</div>
-        <h2>龙虾出货预警助手</h2>
-        <p>插件页单独展示 demo 视频、下载入口、安装步骤和产品说明。这样用户的路径就清楚很多：先看视频，再下载 ZIP，再去 Chrome 加载扩展。</p>
-        <div class="preview">
-          <video class="thumb-video" src="Screen-2026-03-08-130809(1).mp4" muted autoplay loop playsinline></video>
-          <div class="preview-copy">演示视频已经接上，入口和下载也分离出来了，后面可以继续补 FAQ、更新日志和截图。</div>
-        </div>
-        <div class="meta"><span>GMGN</span><span>Dump Alert</span><span>Demo Video</span><span>ZIP Download</span></div>
-        <div class="actions">
-          <a class="btn primary" href="alert.html">进入出货助手 ↗</a>
-          <a class="btn ghost" href="clawback-hud.zip" download>下载插件 ZIP</a>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="card-badge soon">More Soon</div>
-        <h2>更多</h2>
-        <p>这个位置先作为未来扩展位保留。你后面如果要再挂监控页、榜单工具、链上情报页、Bot 工具或者更多插件，直接加新卡片就行，不用重做首页框架。</p>
-        <div class="preview">
-          <img src="shilltracer-assets/tool-mascots/gmgn-hud/lobster-transparent.png" alt="更多工具">
-          <div class="preview-copy">先把门户结构搭稳。后续新增内容就按同一套入口语言继续扩展。</div>
-        </div>
-        <div class="meta"><span>Portal</span><span>Scalable</span><span>Future Tools</span></div>
-        <div class="actions">
-          <a class="btn ghost" href="#">更多工具敬请期待</a>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section-label">当前站点结构</div>
-    <div class="mini-grid">
-      <div class="panel">
-        <h3>现在已经落下来的页面</h3>
-        <div class="list">
-          <div class="item">
-            <strong>`index.html`</strong>
-            <p>真正的导航页，只负责展示 ClawBack 的入口，不再混主工具和插件详情。</p>
-          </div>
-          <div class="item">
-            <strong>`detective.html`</strong>
-            <p>独立的龙虾侦探主工具页，保留原来的核心追踪逻辑和交互。</p>
-          </div>
-          <div class="item">
-            <strong>`alert.html`</strong>
-            <p>龙虾出货预警助手独立产品页，承接视频、说明、下载和安装。</p>
-          </div>
-        </div>
+    <section class="hero">
+      <div>
+        <div class="label">ClawBack Assistant</div>
+        <h1>ClawBack小助手</h1>
+        <p>盯盘、追踪、预警，先从这里进入。</p>
       </div>
-      <div class="panel">
-        <h3>接下来还能继续补的东西</h3>
-        <div class="list">
-          <div class="item">
-            <strong>产品化文案</strong>
-            <p>把每页文案再收一遍，做成更像正式站而不是工程预览。</p>
-          </div>
-          <div class="item">
-            <strong>视觉统一</strong>
-            <p>后面可继续统一标题、按钮、状态标签、页脚、卡片层级和角色素材。</p>
-          </div>
-          <div class="item">
-            <strong>正式发布前清理</strong>
-            <p>等你确认预览后，再做 repo 清理、选文件提交、最后再 commit / push。</p>
-          </div>
-        </div>
+      <div class="hero-art">
+        <img src="shilltracer-assets/characters/clawback-helper-hero.png" alt="ClawBack小助手">
       </div>
-    </div>
-  </section>
+    </section>
 
-  <div class="footer">
-    <div>当前预览：`index.html` / `detective.html` / `alert.html`</div>
-    <div>状态：已继续完善页面，但仍然 <strong>未 commit / 未 push</strong></div>
+    <section class="section" id="tools">
+      <div class="section-head">
+        <h2>工具入口</h2>
+        <p>选择你要用的工具</p>
+      </div>
+
+      <div class="tool-grid">
+        <a class="tool-card" href="detective.html">
+          <div>
+            <div class="tool-top">
+              <div class="tool-badge">Main Tool</div>
+            </div>
+            <h3>龙虾侦探</h3>
+            <p>链上追踪与钱包分析主工具。</p>
+            <div class="tool-preview">
+              <img src="shilltracer-assets/mascot-frames/frame_0000.png" alt="龙虾侦探">
+            </div>
+          </div>
+          <div class="tool-footer">
+            <div class="tool-tags">
+              <span>On-Chain</span>
+              <span>Tracking</span>
+              <span>GMGN</span>
+            </div>
+            <div class="tool-link">进入 ↗</div>
+          </div>
+        </a>
+
+        <a class="tool-card" href="alert.html">
+          <div>
+            <div class="tool-top">
+              <div class="tool-badge">Chrome Extension</div>
+            </div>
+            <h3>出货预警助手</h3>
+            <p>GMGN / DeBot 前排出货提醒插件。</p>
+            <div class="tool-preview">
+              <img src="shilltracer-assets/tool-mascots/gmgn-hud/lobster-transparent.png" alt="出货预警助手">
+            </div>
+          </div>
+          <div class="tool-footer">
+            <div class="tool-tags">
+              <span>Plugin</span>
+              <span>Alert</span>
+              <span>GMGN</span>
+            </div>
+            <div class="tool-link">进入 ↗</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <div class="footer-note">如果对你有帮助，感谢打赏 BSC：<span>0x79d2e508070337c66b3e7c2d7bf427232c9a0536</span></div>
   </div>
-</div>
 </body>
 </html>
