@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>龙虾出货预警助手</title>
+<link rel="icon" type="image/png" sizes="32x32" href="shilltracer-assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="shilltracer-assets/favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="shilltracer-assets/favicon/apple-touch-icon.png">
+<link rel="shortcut icon" href="shilltracer-assets/favicon/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--surface:#111118;--border:#242438;--accent:#ff4422;--text:#e6e6f0;--muted:#9a9ab2;--soft:#ffd4cb;--green:#87ffc5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(255,68,34,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,68,34,.025) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:24px 24px 80px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.crumb,.btn,.chip,.section-label,.mini{font-family:'Space Mono',monospace}
+.crumb{font-size:12px;letter-spacing:3px;color:#ff8b72;text-transform:uppercase;font-weight:700}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:12px;text-decoration:none;font-size:12px;letter-spacing:1px;font-weight:800;transition:.2s}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 12px 24px rgba(255,68,34,.18)}
+.btn.ghost{border:1px solid #3a2a25;color:#ffd4cb;background:transparent}
+.btn:hover{transform:translateY(-1px)}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:center;margin-bottom:28px}
+.panel{background:linear-gradient(180deg,rgba(255,68,34,.05) 0%,rgba(20,20,31,.98) 35%);border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:0 22px 50px rgba(0,0,0,.22)}
+.hero h1{font-size:54px;line-height:1.04;letter-spacing:-1.2px;margin-bottom:14px}
+.hero p{font-size:16px;line-height:1.95;color:var(--soft);margin-bottom:18px}
+.hero-visual{display:flex;align-items:center;justify-content:center;min-height:320px;position:relative}
+.hero-visual::before{content:'';position:absolute;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,68,34,.22) 0%,transparent 72%)}
+.hero-visual img{position:relative;z-index:1;width:260px;object-fit:contain;filter:drop-shadow(0 18px 48px rgba(255,68,34,.18))}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.chip{font-size:11px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,68,34,.22);background:rgba(255,68,34,.08);color:#ffd4cb;font-weight:700;letter-spacing:1px}
+.section{margin-top:24px}
+.section-label{font-size:12px;letter-spacing:4px;color:#ffd4cb;text-transform:uppercase;margin-bottom:16px;font-weight:700;display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.video-shell{overflow:hidden;border-radius:18px;border:1px solid var(--border);background:#08080d;box-shadow:0 18px 40px rgba(0,0,0,.22)}
+.video-shell video{display:block;width:100%;height:auto;max-height:620px;background:#000}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.list{display:grid;gap:12px}
+.item{background:#101018;border:1px solid #26263a;border-radius:16px;padding:16px 18px}
+.item strong{display:block;margin-bottom:6px;font-size:15px}
+.item p,.item li{font-size:14px;line-height:1.9;color:#c9c9d7}
+.item ul{padding-left:18px}
+.callout{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:24px}
+.note{margin-top:14px;font-size:12px;line-height:1.7;color:#8d8da2}
+.footer{margin-top:28px;padding-top:18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#7f7f94;font-size:12px;line-height:1.8}
+@media(max-width:960px){.hero,.grid,.callout{grid-template-columns:1fr}.hero h1{font-size:40px}.page{padding:18px 16px 56px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="crumb">// Lobster Dump Alert Assistant</div>
+    <div class="actions">
+      <a class="btn ghost" href="index.html">返回导航页 ↗</a>
+      <a class="btn ghost" href="detective.html">去龙虾侦探 ↗</a>
+      <a class="btn primary" href="clawback-hud.zip" download>下载插件 ZIP</a>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="panel">
+      <h1>龙虾出货预警助手</h1>
+      <p>这是给 <strong>GMGN / DeBot 场景</strong> 准备的独立产品页。现在已经把你放进 repo 的 demo 视频、ZIP 下载和安装说明全接好了。用户打开后路径会很清楚：<strong>先看演示</strong> → <strong>再下载插件</strong> → <strong>最后在 Chrome 里加载扩展</strong>。</p>
+      <div class="row">
+        <span class="chip">Chrome Extension</span>
+        <span class="chip">GMGN 页面提醒</span>
+        <span class="chip">Dump Alert</span>
+        <span class="chip">Demo Video</span>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="clawback-hud.zip" download>⬇ 下载插件 ZIP</a>
+        <a class="btn ghost" href="#video">先看演示视频 ↓</a>
+      </div>
+      <div class="note">当前先把信息链路打通。后面如果你要，我可以继续补正式产品文案、功能截图、FAQ、更新日志和权限说明。</div>
+    </div>
+    <div class="panel hero-visual">
+      <img src="shilltracer-assets/tool-mascots/gmgn-hud/lobster-transparent.png" alt="龙虾出货预警助手">
+    </div>
+  </section>
+
+  <section class="section panel" id="video">
+    <div class="section-label">演示视频</div>
+    <div class="video-shell">
+      <video src="Screen-2026-03-08-130809(1).mp4" controls preload="metadata"></video>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="section-label">这个工具做什么</div>
+      <div class="list">
+        <div class="item">
+          <strong>核心定位</strong>
+          <p>在目标页面上做更即时的出货异动提醒，减少你纯靠肉眼盯盘的成本。它不是替代龙虾侦探，而是和龙虾侦探形成前后台配合：前台给提醒，后台做链上核查。</p>
+        </div>
+        <div class="item">
+          <strong>适合谁用</strong>
+          <p>适合本来就在 GMGN / DeBot 页面上高频看盘、盯单、盯情绪的人。你不需要切一堆页面，先把提醒接住，再决定要不要进一步查链上。</p>
+        </div>
+        <div class="item">
+          <strong>建议使用方式</strong>
+          <ul>
+            <li>先看一遍演示视频，确认交互符合你的使用习惯</li>
+            <li>把扩展装进 Chrome</li>
+            <li>和龙虾侦探配合使用：预警出现 → 再回查链上细节</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-label">安装方式</div>
+      <div class="list">
+        <div class="item">
+          <strong>Chrome 安装步骤</strong>
+          <ul>
+            <li>下载上面的 <code>clawback-hud.zip</code></li>
+            <li>先解压到本地文件夹</li>
+            <li>打开 <code>chrome://extensions</code></li>
+            <li>打开右上角“开发者模式”</li>
+            <li>点击“加载已解压的扩展程序”</li>
+            <li>选择刚刚解压出来的插件目录</li>
+          </ul>
+        </div>
+        <div class="item">
+          <strong>当前状态</strong>
+          <p>现在这页已经是能交付预览的产品页：有视频、有下载、有安装说明。后面你点头的话，我再继续把文案磨成正式发布版。</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="callout">
+    <section class="panel">
+      <div class="section-label">当前已接入的素材</div>
+      <div class="list">
+        <div class="item">
+          <strong>演示视频</strong>
+          <p><code>Screen-2026-03-08-130809(1).mp4</code> 已经接到页面里，可以直接播放。</p>
+        </div>
+        <div class="item">
+          <strong>插件下载</strong>
+          <p><code>clawback-hud.zip</code> 已经作为直接下载入口挂上。</p>
+        </div>
+        <div class="item">
+          <strong>角色素材</strong>
+          <p>插件页继续使用更偏“助手 / HUD”感觉的透明龙虾角色，和龙虾侦探页做视觉区分。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-label">接下来可继续补</div>
+      <div class="list">
+        <div class="item">
+          <strong>FAQ</strong>
+          <p>比如：为什么要开发者模式、后续怎么更新、是否会有自动更新包、支持哪些页面。</p>
+        </div>
+        <div class="item">
+          <strong>功能截图</strong>
+          <p>可以再加几张静态截图，让不想看视频的人也能快速理解插件在做什么。</p>
+        </div>
+        <div class="item">
+          <strong>正式发布文案</strong>
+          <p>如果要对外放，我可以把整页改成更像正式产品官网的语言和结构。</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer">
+    <div>当前页面：`alert.html`</div>
+    <div>状态：已完善，但依然 <strong>未 commit / 未 push</strong></div>
+  </div>
+</div>
+</body>
+</html>
